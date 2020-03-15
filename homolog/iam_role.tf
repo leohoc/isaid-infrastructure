@@ -8,7 +8,14 @@ resource "aws_iam_role" "isaidRole" {
     {
       "Effect": "Allow",
       "Principal": {
-        "Service": ["eks.amazonaws.com", "ec2.amazonaws.com"]
+        "Service": "eks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
       },
       "Action": "sts:AssumeRole"
     }
