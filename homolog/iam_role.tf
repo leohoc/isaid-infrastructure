@@ -1,5 +1,5 @@
-resource "aws_iam_role" "isaidRole" {
-  name = "isaid-role"
+resource "aws_iam_role" "isaid-role" {
+  name = "isaid-cluster-role"
 
   assume_role_policy = <<POLICY
 {
@@ -11,40 +11,23 @@ resource "aws_iam_role" "isaidRole" {
         "Service": "eks.amazonaws.com"
       },
       "Action": "sts:AssumeRole"
-    },
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
     }
   ]
 }
 POLICY
 }
 
-resource "aws_iam_role_policy_attachment" "isaidRole-AmazonEKSClusterPolicy" {
+resource "aws_iam_role_policy_attachment" "isaid-role-AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.isaidRole.name
+  role       = aws_iam_role.isaid-role.name
 }
 
-resource "aws_iam_role_policy_attachment" "isaidRole-AmazonEKSServicePolicy" {
+resource "aws_iam_role_policy_attachment" "isaid-role-AmazonEKSServicePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
-  role       = aws_iam_role.isaidRole.name
+  role       = aws_iam_role.isaid-role.name
 }
 
-resource "aws_iam_role_policy_attachment" "isaidRole-AmazonEKSWorkerNodePolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.isaidRole.name
-}
-
-resource "aws_iam_role_policy_attachment" "isaidRole-AmazonEKS_CNI_Policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = aws_iam_role.isaidRole.name
-}
-
-resource "aws_iam_role_policy_attachment" "isaidRole-AmazonEC2ContainerRegistryReadOnly" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = aws_iam_role.isaidRole.name
+resource "aws_iam_instance_profile" "isaid-instance-profile" {
+  name = "isaid-instance-profile"
+  role = aws_iam_role.isaid-role.name
 }
