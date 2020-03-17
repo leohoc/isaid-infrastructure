@@ -3,7 +3,7 @@ provider "aws" {
   region     = "us-east-1"
 }
 
-# creation the eks cluster
+# creating the eks cluster
 resource "aws_eks_cluster" "isaid-cluster" {
   name     = var.cluster-name
   role_arn = aws_iam_role.isaid-role.arn
@@ -19,6 +19,7 @@ resource "aws_eks_cluster" "isaid-cluster" {
   ]
 }
 
+# creating a node group with two workers in the eks cluster
 resource "aws_eks_node_group" "isaidClusterNodeGroup" {
   cluster_name    = aws_eks_cluster.isaid-cluster.name
   node_group_name = "isaid-cluster-node-group"
