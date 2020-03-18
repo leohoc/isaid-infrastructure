@@ -24,6 +24,20 @@ resource "aws_iam_role" "isaid-role" {
 POLICY
 }
 
+data "aws_iam_policy_document" "isaid-role-AmazonEC2DescribeAccountAttributes" {
+  statement {
+    effect = "Allow"
+    actions = ["ec2:DescribeAccountAttributes"]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "isaid-role-policy" {
+  name   = "isaid-role-policy"
+  path   = "/"
+  policy = data.aws_iam_policy_document.isaid-role-AmazonEC2DescribeAccountAttributes.json
+}
+
 resource "aws_iam_role_policy_attachment" "isaid-role-AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
   role       = aws_iam_role.isaid-role.name
@@ -34,22 +48,30 @@ resource "aws_iam_role_policy_attachment" "isaid-role-AmazonEKSServicePolicy" {
   role       = aws_iam_role.isaid-role.name
 }
 
-resource "aws_iam_role_policy_attachment" "isaidRole-AmazonEKSWorkerNodePolicy" {
+resource "aws_iam_role_policy_attachment" "isaid-role-AmazonEKSWorkerNodePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
   role       = aws_iam_role.isaid-role.name
 }
 
-resource "aws_iam_role_policy_attachment" "isaidRole-AmazonEKS_CNI_Policy" {
+resource "aws_iam_role_policy_attachment" "isaid-role-AmazonEKS_CNI_Policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
   role       = aws_iam_role.isaid-role.name
 }
 
-resource "aws_iam_role_policy_attachment" "isaidRole-AmazonEC2ContainerRegistryReadOnly" {
+resource "aws_iam_role_policy_attachment" "isaid-role-AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   role       = aws_iam_role.isaid-role.name
+}
+
+resource "aws_iam_role_policy_attachment" "isaid-role-policy-attachment" {
+  role       = aws_iam_role.isaid-role.name
+  policy_arn = aws_iam_policy.isaid-role-policy.arn
 }
 
 resource "aws_iam_instance_profile" "isaid-instance-profile" {
   name = "isaid-instance-profile"
   role = aws_iam_role.isaid-role.name
 }
+
+
+

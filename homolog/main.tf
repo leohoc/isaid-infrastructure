@@ -15,7 +15,7 @@ resource "aws_eks_cluster" "isaid-cluster" {
 
   depends_on = [
     aws_iam_role_policy_attachment.isaid-role-AmazonEKSClusterPolicy,
-    aws_iam_role_policy_attachment.isaid-role-AmazonEKSServicePolicy,
+    aws_iam_role_policy_attachment.isaid-role-AmazonEKSServicePolicy
   ]
 }
 
@@ -34,9 +34,8 @@ resource "aws_eks_node_group" "isaidClusterNodeGroup" {
   }
 
   depends_on = [
-    aws_iam_role_policy_attachment.isaidRole-AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.isaidRole-AmazonEKS_CNI_Policy,
-    aws_iam_role_policy_attachment.isaidRole-AmazonEC2ContainerRegistryReadOnly,
+    aws_iam_role_policy_attachment.isaid-role-AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.isaid-role-AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.isaid-role-AmazonEC2ContainerRegistryReadOnly,
   ]
 }
-
