@@ -73,5 +73,30 @@ resource "aws_iam_instance_profile" "isaid-instance-profile" {
   role = aws_iam_role.isaid-role.name
 }
 
+###############################################
+# Configuring access to DynamoDB Prophet table
+###############################################
 
+data "aws_iam_policy_document" "isaid-role-AmazonDynamoDBProphetTableAccess" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:DeleteItem",
+      "dynamodb:GetItem",
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem"
+    ]
+    resources = ["arn:aws:dynamodb:${var.region}:${var.account_id}:table/${aws_dynamodb_table.prophet-dynamodb-table.name}"]
+  }
+}
+
+resource "aws_iam_policy" "isaid-role-dynamodb-policy" {
+  name   = "isaid-role-dynamodb-policy"
+  path   = "/"
+  policy = data.aws_iam_policy_document.isaid-role-AmazonDynamoDBProphetTableAccess.json
+}
+resource "aws_iam_role_policy_attachment" "isaid-role-dynamodb-policy-attachment" {
+  role       = aws_iam_role.isaid-role.name
+  policy_arn = aws_iam_policy.isaid-role-dynamodb-policy.arn
+}
 
