@@ -7,9 +7,10 @@
 Terraform project to provide the infrastructure needed to run the ISAID project in AWS.
 Currently it provides the following resources:
 
-  * A Kubernetes cluster using EKS, with Node Groups containing two m4.large EC2 machines;
+  * A Kubernetes cluster using EKS, with Node Groups containing two t2.micro EC2 machines;
   * Networking items: a VPC with two Subnets, with internet gateway, routes and security groups configured;
   * A registry repository using ECR to store the application images;
+  * A DynamoDB table;
   * A role with the policies needed to build the aforementioned resources; 
 
 ### Building the infrastructure
