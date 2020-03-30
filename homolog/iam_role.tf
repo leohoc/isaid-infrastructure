@@ -90,13 +90,40 @@ data "aws_iam_policy_document" "isaid-role-AmazonDynamoDBProphetTableAccess" {
   }
 }
 
-resource "aws_iam_policy" "isaid-role-dynamodb-policy" {
+resource "aws_iam_policy" "isaid-role-dynamodb-prophet-policy" {
   name   = "isaid-role-dynamodb-policy"
   path   = "/"
   policy = data.aws_iam_policy_document.isaid-role-AmazonDynamoDBProphetTableAccess.json
 }
-resource "aws_iam_role_policy_attachment" "isaid-role-dynamodb-policy-attachment" {
+resource "aws_iam_role_policy_attachment" "isaid-role-dynamodb-prophet-policy-attachment" {
   role       = aws_iam_role.isaid-role.name
-  policy_arn = aws_iam_policy.isaid-role-dynamodb-policy.arn
+  policy_arn = aws_iam_policy.isaid-role-dynamodb-prophet-policy.arn
+}
+
+###############################################
+# Configuring access to DynamoDB Prophecy table
+###############################################
+
+data "aws_iam_policy_document" "isaid-role-AmazonDynamoDBProphecyTableAccess" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:DeleteItem",
+      "dynamodb:GetItem",
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem"
+    ]
+    resources = ["arn:aws:dynamodb:${var.region}:${var.account_id}:table/${aws_dynamodb_table.prophecy-dynamodb-table.name}"]
+  }
+}
+
+resource "aws_iam_policy" "isaid-role-dynamodb-prophecy-policy" {
+  name   = "isaid-role-dynamodb-prophecy-policy"
+  path   = "/"
+  policy = data.aws_iam_policy_document.isaid-role-AmazonDynamoDBProphecyTableAccess.json
+}
+resource "aws_iam_role_policy_attachment" "isaid-role-dynamodb-prophecy-policy-attachment" {
+  role       = aws_iam_role.isaid-role.name
+  policy_arn = aws_iam_policy.isaid-role-dynamodb-prophecy-policy.arn
 }
 
