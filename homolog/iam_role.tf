@@ -111,7 +111,8 @@ data "aws_iam_policy_document" "isaid-role-AmazonDynamoDBProphecyTableAccess" {
       "dynamodb:DeleteItem",
       "dynamodb:GetItem",
       "dynamodb:PutItem",
-      "dynamodb:UpdateItem"
+      "dynamodb:UpdateItem",
+      "dynamodb:Query"
     ]
     resources = ["arn:aws:dynamodb:${var.region}:${var.account_id}:table/${aws_dynamodb_table.prophecy-dynamodb-table.name}"]
   }
