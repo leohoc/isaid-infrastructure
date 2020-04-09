@@ -128,3 +128,30 @@ resource "aws_iam_role_policy_attachment" "isaid-role-dynamodb-prophecy-policy-a
   policy_arn = aws_iam_policy.isaid-role-dynamodb-prophecy-policy.arn
 }
 
+###############################################
+# Configuring access to DynamoDB Follower table
+###############################################
+
+data "aws_iam_policy_document" "isaid-role-AmazonDynamoDBFollowerTableAccess" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:DeleteItem",
+      "dynamodb:GetItem",
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem",
+      "dynamodb:Query"
+    ]
+    resources = ["arn:aws:dynamodb:${var.region}:${var.account_id}:table/${aws_dynamodb_table.follower-dynamodb-table.name}"]
+  }
+}
+
+resource "aws_iam_policy" "isaid-role-dynamodb-follower-policy" {
+  name   = "isaid-role-dynamodb-follower-policy"
+  path   = "/"
+  policy = data.aws_iam_policy_document.isaid-role-AmazonDynamoDBFollowerTableAccess.json
+}
+resource "aws_iam_role_policy_attachment" "isaid-role-dynamodb-follower-policy-attachment" {
+  role       = aws_iam_role.isaid-role.name
+  policy_arn = aws_iam_policy.isaid-role-dynamodb-follower-policy.arn
+}
