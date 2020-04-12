@@ -46,15 +46,10 @@ resource "aws_dynamodb_table" "follower-dynamodb-table" {
   read_capacity  = 20
   write_capacity = 20
   hash_key       = "followerCode"
-  range_key      = "eventTimestamp"
+  range_key      = "prophetCode"
 
   attribute {
     name = "followerCode"
-    type = "S"
-  }
-
-  attribute {
-    name = "eventTimestamp"
     type = "S"
   }
 
@@ -63,10 +58,15 @@ resource "aws_dynamodb_table" "follower-dynamodb-table" {
     type = "S"
   }
 
+  attribute {
+    name = "eventTimestamp"
+    type = "S"
+  }
+
   global_secondary_index {
     name               = "ProphetFollowersIndex"
     hash_key           = "prophetCode"
-    range_key          = "eventTimestamp"
+    range_key          = "followerCode"
     write_capacity     = 20
     read_capacity      = 20
     projection_type    = "ALL"
