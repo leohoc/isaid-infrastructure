@@ -10,6 +10,19 @@ resource "aws_dynamodb_table" "prophet-dynamodb-table" {
     type = "S"
   }
 
+  attribute {
+    name = "prophetCode"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name               = "ProphetCodeIndex"
+    hash_key           = "prophetCode"
+    write_capacity     = 20
+    read_capacity      = 20
+    projection_type    = "ALL"
+  }
+
   tags = {
     Name        = "dynamodb-prophet-table"
     Environment = "homolog"
