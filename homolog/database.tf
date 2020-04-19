@@ -71,11 +71,6 @@ resource "aws_dynamodb_table" "follower-dynamodb-table" {
     type = "S"
   }
 
-  attribute {
-    name = "eventTimestamp"
-    type = "S"
-  }
-
   global_secondary_index {
     name               = "ProphetFollowersIndex"
     hash_key           = "prophetCode"
