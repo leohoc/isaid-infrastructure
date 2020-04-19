@@ -84,7 +84,8 @@ data "aws_iam_policy_document" "isaid-role-AmazonDynamoDBProphetTableAccess" {
       "dynamodb:DeleteItem",
       "dynamodb:GetItem",
       "dynamodb:PutItem",
-      "dynamodb:UpdateItem"
+      "dynamodb:UpdateItem",
+      "dynamodb:Query"
     ]
     resources = ["arn:aws:dynamodb:${var.region}:${var.account_id}:table/${aws_dynamodb_table.prophet-dynamodb-table.name}"]
   }
@@ -155,3 +156,29 @@ resource "aws_iam_role_policy_attachment" "isaid-role-dynamodb-follower-policy-a
   role       = aws_iam_role.isaid-role.name
   policy_arn = aws_iam_policy.isaid-role-dynamodb-follower-policy.arn
 }
+
+##########################################################
+# Configuring access to DynamoDB Index
+##########################################################
+
+data "aws_iam_policy_document" "isaid-role-AmazonDynamoDBIndexAccess" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:Query"
+    ]
+    resources = ["arn:aws:dynamodb:${var.region}:${var.account_id}:table/${aws_dynamodb_table.follower-dynamodb-table.name}/index/*",
+                  "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${aws_dynamodb_table.prophet-dynamodb-table.name}/index/*"]
+  }
+}
+
+resource "aws_iam_policy" "isaid-role-dynamodb-index-policy" {
+  name   = "isaid-role-dynamodb-index-policy"
+  path   = "/"
+  policy = data.aws_iam_policy_document.isaid-role-AmazonDynamoDBIndexAccess.json
+}
+resource "aws_iam_role_policy_attachment" "isaid-role-dynamodb-index-policy-attachment" {
+  role       = aws_iam_role.isaid-role.name
+  policy_arn = aws_iam_policy.isaid-role-dynamodb-index-policy.arn
+}
+
