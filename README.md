@@ -10,7 +10,7 @@ Currently it provides the following resources:
   * A Kubernetes cluster using EKS, with Node Groups containing two t2.micro EC2 machines;
   * Networking items: a VPC with two Subnets, with internet gateway, routes and security groups configured;
   * A registry repository using ECR to store the application images;
-  * A DynamoDB table;
+  * DynamoDB tables for prophets, prophecies and followers;
   * A role with the policies needed to build the aforementioned resources; 
 
 ### Building the infrastructure
